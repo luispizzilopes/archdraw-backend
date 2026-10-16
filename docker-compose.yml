@@ -1,0 +1,45 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: archdraw-postgres
+    environment:
+      POSTGRES_USER: archdraw
+      POSTGRES_PASSWORD: archdraw
+      POSTGRES_DB: archdraw
+    ports:
+      - "5432:5432"
+    volumes:
+      - archdraw-pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U archdraw -d archdraw"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  redis:
+    image: redis:7
+    container_name: archdraw-redis
+    profiles: ["redis"]
+    ports:
+      - "6379:6379"
+
+  api:
+    build:
+      context: .
+      dockerfile: Archdraw.Presentation/Dockerfile
+    container_name: archdraw-api
+    profiles: ["api"]
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - "5080:8080"
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ConnectionStrings__DefaultConnection: "Host=postgres;Port=5432;Database=archdraw;Username=archdraw;Password=archdraw"
+      Jwt__key: "${JWT_KEY:-}"
+      Cors__AllowedOrigins__0: "http://localhost:5173"
+      LocalStorage__PublicBaseUrl: "http://localhost:5080/uploads"
+
+volumes:
+  archdraw-pgdata:

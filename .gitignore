@@ -1,0 +1,11 @@
+bin/
+obj/
+Logs/
+uploads/
+.vs/
+.idea/
+*.user
+appsettings.*.local.json
+.env
+TestResults/
+appsettings.Localhost.json
