@@ -120,7 +120,7 @@ User (AppUser : IdentityUser<Guid>) 1—N Project 1—N Diagram 1—N DiagramNod
 | Conexão com nó inexistente/de outro diagrama | Rejeitada no domínio **e** pelo banco (FK composta `(DiagramId, NodeId)`). |
 | Vínculo para diagrama/componente de outro projeto | `400` (validado no `SnapshotPreparer`). |
 
-**Catálogos** (estilos, padrões, tipos de componente e de conexão) são constantes tipadas com ids estáveis em `Domain/Catalogs`, sem tabelas nem CRUD; `GET /api/v1/catalogs` os expõe.
+**Catálogos** (estilos, padrões, tipos de componente e de conexão) são constantes tipadas com ids estáveis em `Domain/Catalogs`, sem tabelas nem CRUD; `GET /api/v1/catalogs` os expõe. O catálogo cobre 12 estilos, 22 padrões arquiteturais e os tipos de componente, incluindo componentes internos de DDD/CQRS/Hexagonal e uma seção de Design Patterns (ids com prefixo `dp-`). Ao adicionar um item, atualize também `archdraw-frontend/src/data` — os ids precisam coincidir.
 
 **Componente vs. nó:** nós vinculados (`componentId`) exibem sempre as propriedades **atuais do componente**; salvar um snapshot não sobrescreve o componente com dados antigos do nó (evita sobrescrita silenciosa entre diagramas). Edita-se o componente por `PUT /components/{id}`.
 
